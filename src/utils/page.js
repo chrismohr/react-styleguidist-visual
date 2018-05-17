@@ -74,15 +74,10 @@ async function takeNewScreenshotOfPreview (page, preview, index, { dir }) {
   const { name, description = `${index}`, viewport } = preview
   const basename = `${name} ${description.toLowerCase()} ${viewport.toLowerCase()}`.replace(/[^0-9A-Z]+/gi, '_')
   const relativePath = path.join(dir, `${basename}.new.png`)
-
-  const clip = await page.evaluate(() => {
-    const el = document.querySelector('[data-preview]')
-    const { x, y, width, height } = el.getBoundingClientRect()
-    return { x, y, width, height }
-  })
+  const el = await page.$('[data-preview]');
 
   debug('Storing screenshot of %s in %s', chalk.blue(name), chalk.cyan(relativePath))
-  await page.screenshot({ clip, path: relativePath })
+  await el.screenshot({ path: relativePath })
 }
 
 async function goToUrl (page, url, navigationOptions) {
